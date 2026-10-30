@@ -1,0 +1,26 @@
+name: Windows build and lifecycle tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        shell: powershell
+        run: .\build.ps1
+      - name: Test lifecycle
+        shell: powershell
+        run: .\test.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chatgpt-quota-widget-windows
+          path: |
+            QuotaFloat.exe
+            Install.cmd
+            Install.ps1
+            Uninstall.cmd
+            Uninstall.ps1
+            README.md
+            LICENSE

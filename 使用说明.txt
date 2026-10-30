@@ -1,0 +1,7 @@
+chatgpt额度显示插件
+
+解压后双击 Install.cmd 安装，之后随 ChatGPT / Codex 桌面程序自动显示浮窗。
+程序完全退出后浮窗及额度查询进程自动关闭；轻量后台监控等待下次启动。
+显示的是 Codex 短周期与每周剩余额度，需要已安装并登录 Codex。
+卸载请双击 Uninstall.cmd。
+完整使用说明、隐私说明和源码构建步骤见 README.md。

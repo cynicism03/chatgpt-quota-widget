@@ -1,0 +1,6 @@
+QuotaFloat.exe
+dist/
+*.log
+*.user
+settings.json
+test-results/
