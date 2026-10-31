@@ -10,7 +10,7 @@ Windows 桌面额度浮窗，显示已登录账号的 **Codex 短周期与每周
 2. 解压全部文件，双击 `Install.cmd`，无需管理员权限。
 3. 打开 ChatGPT / Codex 桌面程序，浮窗自动出现。当前已打开时也会立即显示。
 
-安装位置：`%LOCALAPPDATA%\ChatGPTQuotaFloat`。安装器为当前用户添加登录启动项；登录后由轻量后台监控检测桌面程序。桌面程序退出后，监控仍在等待下一次启动，但不会继续查询额度。仅最小化或隐藏主程序时，只要其进程仍运行，浮窗就会保留。
+安装位置：`%USERPROFILE%\.chatgpt-quota-widget`，避开 MSIX 桌面应用对 AppData 的文件隔离，确保 Windows 启动任务能访问程序。安装器为当前用户添加登录启动项，并注册 `ChatGPTQuotaFloat-Watchdog` 计划任务：登录时启动，后台监控退出时在约 1 分钟内重新启动。无需管理员权限；若系统禁止创建任务，安装器会显示警告并保留登录启动作为备用。桌面程序退出后，监控仍在等待下一次启动，但不会继续查询额度。仅最小化或隐藏主程序时，只要其进程仍运行，浮窗就会保留。
 
 无需安装时，可以直接双击 `QuotaFloat.exe`：它会在本次登录中监控主程序；未安装时不会自动随下次 Windows 登录启动。`QuotaFloat.exe --standalone` 可独立显示浮窗。
 
@@ -24,9 +24,9 @@ Windows 桌面额度浮窗，显示已登录账号的 **Codex 短周期与每周
 
 ## 卸载
 
-双击安装目录或下载包中的 `Uninstall.cmd`，结束监控、移除登录启动项和安装文件。下载包和位置设置会保留。也可用 `QuotaFloat.exe --stop` 仅停止监控。
+双击安装目录或下载包中的 `Uninstall.cmd`，移除自动恢复计划任务、结束监控、移除登录启动项和安装文件。下载包和位置设置会保留。`QuotaFloat.exe --stop` 仅临时停止监控；安装了自动恢复任务时约 1 分钟后会重新启动。暂停显示请使用浮窗右键的“本次关闭”。
 
-位置和刷新间隔保存在 `%LOCALAPPDATA%\CodexQuotaFloat\settings.json`，兼容旧版设置。
+位置和刷新间隔保存在 `%USERPROFILE%\.chatgpt-quota-widget\settings.json`，安装时会尝试迁移旧版设置。
 
 ## 数据与隐私
 

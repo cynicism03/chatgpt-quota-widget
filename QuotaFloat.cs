@@ -211,7 +211,7 @@ namespace QuotaFloat {
         readonly ToolTip tip = new ToolTip { AutoPopDelay = 20000, InitialDelay = 250, ReshowDelay = 100 };
         readonly NotifyIcon tray;
         readonly ContextMenuStrip menu = new ContextMenuStrip();
-        readonly string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CodexQuotaFloat", "settings.json");
+        readonly string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".chatgpt-quota-widget", "settings.json");
         Quota quota;
         DateTime fetched;
         bool busy, failed, closing, dragging;
