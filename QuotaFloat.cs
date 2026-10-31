@@ -204,7 +204,7 @@ namespace QuotaFloat {
         }
         public void Dispose() { Stop(); }
     }
-    sealed class Widget : Form {
+    sealed partial class Widget : Form {
         readonly QuotaClient client = new QuotaClient();
         readonly System.Windows.Forms.Timer refreshTimer = new System.Windows.Forms.Timer();
         readonly System.Windows.Forms.Timer displayTimer = new System.Windows.Forms.Timer();
@@ -244,6 +244,7 @@ namespace QuotaFloat {
                 DestroyIcon(handle);
             }
             Icon = appIcon;
+            menu.Items.Add("控制面板 / 快捷键设置", null, delegate { OpenControlPanel(); });
             menu.Items.Add("立即刷新", null, async delegate { await RefreshQuota(); });
             menu.Items.Add("查看恢复时间", null, delegate { ShowDetails(); });
             var rates = new ToolStripMenuItem("刷新间隔");
@@ -280,8 +281,8 @@ namespace QuotaFloat {
         }
         void DefaultPosition() { var area = Screen.PrimaryScreen.WorkingArea; Location = new Point(area.Left + 8, area.Bottom - Height - 85); }
         void KeepOnScreen() { var area = Screen.FromPoint(Location).WorkingArea; Location = new Point(Math.Max(area.Left, Math.Min(area.Right - Width, Left)), Math.Max(area.Top, Math.Min(area.Bottom - Height, Top))); }
-        void LoadSettings() { try { var d = Json.Decode(File.ReadAllText(settingsPath)); Location = new Point(Convert.ToInt32(d["x"]), Convert.ToInt32(d["y"])); int n = Convert.ToInt32(d["interval"]); if (n == 30 || n == 60 || n == 120) interval = n; KeepOnScreen(); } catch { } }
-        void SaveSettings() { try { Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)); File.WriteAllText(settingsPath, Json.Encode(new { x = Left, y = Top, interval = interval })); } catch { } }
+        void LoadSettings() { try { var d = Json.Decode(File.ReadAllText(settingsPath)); Location = new Point(Convert.ToInt32(d["x"]), Convert.ToInt32(d["y"])); int n = Convert.ToInt32(d["interval"]); if (n == 30 || n == 60 || n == 120) interval = n; if (d.ContainsKey("topMost")) TopMost = Convert.ToBoolean(d["topMost"]); if (d.ContainsKey("hotkeys")) { var values = ((System.Collections.IEnumerable)d["hotkeys"]).Cast<object>().Select(Convert.ToInt32).ToArray(); if (values.Length == shortcuts.Length && values.All(ValidShortcut) && values.Where(v => v != 0).Distinct().Count() == values.Count(v => v != 0)) shortcuts = values; } KeepOnScreen(); } catch { } }
+        void SaveSettings() { try { Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)); File.WriteAllText(settingsPath, Json.Encode(new { x = Left, y = Top, interval = interval, topMost = TopMost, hotkeys = shortcuts })); } catch { } }
         void UpdateRates(ToolStripMenuItem parent) { foreach (ToolStripMenuItem item in parent.DropDownItems) item.Checked = Convert.ToInt32(item.Tag) == interval; }
         async Task RefreshQuota() {
             if (busy || closing) return;
